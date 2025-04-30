@@ -1,0 +1,50 @@
+[package]
+name = "rad-esp32"
+version = "0.0.0"
+edition = "2021"
+license = "Apache-2.0"
+publish = false
+
+[[bin]]
+name = "rad-esp32"
+path = "./src/bin/main.rs"
+
+[dependencies]
+rad-drone = { path=".." }
+
+# ESP 32 dependencies
+esp-hal = { version="0.23.1", features=["log"] }
+esp-backtrace = { version="*", features=[
+    "exception-handler",
+    "panic-handler",
+    "println",
+    "custom-halt" # reboot upon halt
+]}
+esp-alloc = "*"
+esp-println = { version="*", features = ["log"] }
+esp-hal-embassy = "*"
+embassy-executor = { version = "*", features = ["task-arena-size-20480"] }
+# esp-wifi = { git="https://github.com/esp-rs/esp-hal.git", tag="v0.23.1", features=["wifi"] }
+# esp-storage = { git="https://github.com/esp-rs/esp-hal.git", tag="v0.23.1", optional=true }
+# esp-ieee802154 = { git="https://github.com/esp-rs/esp-hal.git", tag="v0.23.1", optional=true }
+
+
+[features]
+default = ["esp32"]
+esp32 = ["esp-hal/esp32", "esp-backtrace/esp32", "esp-println/esp32", "esp-hal-embassy/esp32" ]
+# esp32 = ["esp-hal/esp32", "esp-backtrace/esp32", "esp-println/esp32", esp-hal-embassy/esp32", "esp-wifi/esp32" ]
+
+
+[profile.dev]
+# Rust debug is too slow.
+# For debug builds always builds with some optimization
+opt-level = "s"
+
+[profile.release]
+codegen-units = 1        # LLVM can perform better optimizations using a single thread
+debug = 2
+debug-assertions = false
+incremental = false
+lto = 'fat'
+opt-level = 's'
+overflow-checks = false
