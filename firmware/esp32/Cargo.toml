@@ -23,7 +23,7 @@ esp-backtrace = { version="*", features=[
 esp-alloc = "*"
 esp-println = { version="*", features = ["log"] }
 esp-hal-embassy = "*"
-embassy-executor = { version = "*", features = ["task-arena-size-20480"] }
+embassy-executor = { version = "*", features = ["task-arena-size-20480"] } # FIXME import from rad-drone (not currently supported)
 # esp-wifi = { git="https://github.com/esp-rs/esp-hal.git", tag="v0.23.1", features=["wifi"] }
 # esp-storage = { git="https://github.com/esp-rs/esp-hal.git", tag="v0.23.1", optional=true }
 # esp-ieee802154 = { git="https://github.com/esp-rs/esp-hal.git", tag="v0.23.1", optional=true }
