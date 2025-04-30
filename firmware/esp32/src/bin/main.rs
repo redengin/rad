@@ -7,7 +7,7 @@ pub extern "C" fn custom_halt() { esp_hal::reset::software_reset(); }
 
 use esp_alloc as _;
 
-use rad_drone::embassy_time::{Duration, Timer};
+use rad_drone::time::{Duration, Timer};
 
 
 #[esp_hal_embassy::main]
