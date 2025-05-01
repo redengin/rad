@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
-use esp_backtrace as _;
-// override halt to perform a software reset
+use esp_backtrace as _; // implements panic
+// override panic's halt to perform a software reset
 #[unsafe(no_mangle)]
 pub extern "C" fn custom_halt() { esp_hal::reset::software_reset(); }
 
