@@ -1,15 +1,79 @@
 Rust Autonomous Drone Architecture
 ================================================================================
-```mermaid
+
+## Flight Controller
+For autonomous display missions, the flight controller's objective is to achieve
+the position objective by the deadline. The flight controller is unaware of it's
+surroundings.
+
+[Object Avoidance](#ObjectAvoidance) is managed separately at a higher context.
+To avoid collisions, new paths are created by directing the flight controller to
+subpath position objectives.
+
+<!-- ```mermaid
 architecture-beta
-    group fc(cloud)[Flight Controller]
+    group fc(server)[Flight Controller]
+        service pc(server)[Position Controller] in fc
+        %% service arc(server)[Attitude & Rate Controller] in fc
+        service arc(server)[Attitude Rate Controller] in fc
+        service control(server)[Vehicle Controller] in fc
+        service health(database)[Motor Health] in fc
 
-    %% service db(database)[Database] in api
-    %% service disk1(disk)[Storage] in api
-    %% service disk2(disk)[Storage] in api
-    %% service server(server)[Server] in api
+    pc:R -- L:arc
+    arc:R -- L:control
+    control:B -- T:motors
+    control:R -- L:health
+    health:T -- T:arc
 
-    %% db:L -- R:server
-    %% disk1:T -- B:server
-    %% disk2:T -- B:db
+    group hardware(server)[Hardware]
+        service motors(server)[Motors] in hardware
+        service gps(server)[GPS] in hardware
+        service imu(server)[IMU] in hardware
+
+    gps:T -- B:pc
+    imu:T -- B:arc
+``` -->
+
+```mermaid
+---
+  title: Flight Controller
+  config:
+    look: neo
+    class:
+      hideEmptyMembersBox: true
+---
+classDiagram
+    direction LR 
+
+    class pc["Position Controller"] {
+        position : [altitude, longitude, latitude]
+        deadline : when the position must occur
+    }
+    class arc["Attitude & Rate Controller"] {
+        angle : euler angle
+        rate : linear velocity
+    }
+    class vc["Vehicle Controller"] {
+        motor_speed[]
+    }
+    class health["Motor Health"]
+
+    pc --> arc
+    arc --> vc
+    health -- vc
+    health -- arc
 ```
+
+* Position Controller - manages the position of the drone (manuevers)
+    * Uses the linear path from the current position to the objective position
+    * Velocity along the path controlled by the deadline
+
+* Attitude & Rate Controller - controls the manuever
+
+* Vehicle Controller - manages the motor actuation toward the maneuver
+
+* Motor Health - raises awareness of motor performance
+    * Vehicle Controller
+        * may use to raise/lower commanded rate of motors
+    * Attitude & Rate Controller
+        * may use to rotate it's orientation to optimize the manuever
