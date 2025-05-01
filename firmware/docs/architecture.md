@@ -6,7 +6,7 @@ For autonomous display missions, the flight controller's objective is to achieve
 the position objective by the deadline. The flight controller is unaware of it's
 surroundings.
 
-[Object Avoidance](#ObjectAvoidance) is managed separately at a higher context.
+[Object Avoidance](#object-avoidance) is managed separately at a higher context.
 To avoid collisions, new paths are created by directing the flight controller to
 subpath position objectives.
 
@@ -81,3 +81,13 @@ adjusting to their environment (wind, precipitation, motor health, etc).
         * may use to raise/lower commanded rate of motors
     * Attitude & Rate Controller
         * may use to rotate it's orientation to optimize the manuever
+
+
+## Object Avoidance
+To safely use drones, they must stay within allowed space partitions.
+
+Spacial partitions include:
+* static - buildings, utility wiring, etc.
+* dynamic
+    * aircraft
+    * drones of the same swarm
