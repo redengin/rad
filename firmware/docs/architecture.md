@@ -63,12 +63,16 @@ classDiagram
     health -- vc
     health -- arc
 ```
+The flight controller is responsible for managing manuevers from the current
+position to the objective position. Manuevers are dynamic - constantly
+adjusting to their environment (wind, precipitation, motor health, etc).
 
-* Position Controller - manages the position of the drone (manuevers)
+* Position Controller - creates manuevers
     * Uses the linear path from the current position to the objective position
-    * Velocity along the path controlled by the deadline
+    * velocity along the path controlled by the deadline
 
-* Attitude & Rate Controller - controls the manuever
+* Attitude & Rate Controller - dynamically controls the manuever
+    * Chooses the vehicle attitude and desired velocity for the manuever
 
 * Vehicle Controller - manages the motor actuation toward the maneuver
 
