@@ -1,7 +1,7 @@
 [target.xtensa-esp32-none-elf]
 runner = "espflash flash --monitor --chip esp32 --baud 460800"
 
-[env] # FIXME choose per profile
+[env] # TODO choose per profile (option 'dotenvy')
 ESP_LOG = "debug"
 # ESP_LOG = "info"
 
