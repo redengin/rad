@@ -4,7 +4,11 @@
 pub use log;
 pub use embassy_time as time;
 
-use time::{Duration, Timer};
+// export rad_drone abstractions
+// pub use gps;
+// pub use imu;
+// pub use motors;
+
 
 pub fn start(spawner: embassy_executor::Spawner)
 {
@@ -14,6 +18,7 @@ pub fn start(spawner: embassy_executor::Spawner)
     spawner.spawn(dummy()).unwrap();
 }
 
+use time::{Duration, Timer};
 #[embassy_executor::task]
 async fn dummy()
 {
