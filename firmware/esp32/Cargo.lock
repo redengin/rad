@@ -765,7 +765,9 @@ checksum = "bd7a31eed1591dcbc95d92ad7161908e72f4677f8fabf2a32ca49b4237cbf211"
 name = "rad-drone"
 version = "0.0.0"
 dependencies = [
+ "embassy-executor",
  "embassy-time",
+ "log",
 ]
 
 [[package]]

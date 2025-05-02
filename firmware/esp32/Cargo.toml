@@ -40,6 +40,7 @@ esp32 = ["esp-hal/esp32", "esp-backtrace/esp32", "esp-println/esp32", "esp-hal-e
 # For debug builds always builds with some optimization
 opt-level = "s"
 
+
 [profile.release]
 codegen-units = 1        # LLVM can perform better optimizations using a single thread
 debug = 2

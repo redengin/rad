@@ -4,9 +4,9 @@ use esp_backtrace as _; // implements panic
 // override panic's halt to perform a software reset
 #[unsafe(no_mangle)]
 pub extern "C" fn custom_halt() { esp_hal::reset::software_reset(); }
-
 use esp_alloc as _;
-
+// use re-exported dependencies
+use rad_drone::log;
 use rad_drone::time::{Duration, Timer};
 
 
@@ -33,8 +33,16 @@ async fn main(spawner: embassy_executor::Spawner)
     // initialize logger
     esp_println::logger::init_logger_from_env();
 
+    // start the rad_drone tasks
+    rad_drone::start(spawner);
+    log::info!("rad_drone started");
+
+    // FIXME
     spawner.spawn(ping()).unwrap();
-    spawner.spawn(pong()).unwrap();
+
+    loop {
+        Timer::after(Duration::from_millis(1_000)).await;
+    }
 }
 
 #[embassy_executor::task]
@@ -42,18 +50,7 @@ async fn ping()
 {
     loop
     {
-        esp_println::println!("PING");
+        log::debug!("ping");
         Timer::after(Duration::from_millis(1_000)).await;
-    }
-}
-
-#[embassy_executor::task]
-async fn pong()
-{
-    loop
-    {
-        esp_println::println!("PONG");
-        Timer::after(Duration::from_millis(1_000)).await;
-        panic!();
     }
 }
