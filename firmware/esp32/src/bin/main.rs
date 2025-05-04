@@ -1,13 +1,15 @@
 #![no_std]
 #![no_main]
+// use re-exported dependencies
+use rad_drone::log;
+use rad_drone::time::{Duration, Timer};
+
+// provide no_std support
 use esp_backtrace as _; // implements panic
 // override panic's halt to perform a software reset
 #[unsafe(no_mangle)]
 pub extern "C" fn custom_halt() { esp_hal::reset::software_reset(); }
 use esp_alloc as _;
-// use re-exported dependencies
-use rad_drone::log;
-use rad_drone::time::{Duration, Timer};
 
 
 #[esp_hal_embassy::main]
@@ -36,24 +38,9 @@ async fn main(spawner: embassy_executor::Spawner)
 #[cfg(not(debug_assertions))]
     esp_println::logger::init_logger(log::LevelFilter::Info);
 
+    // initialize the vehicle
+    let vehicle = rad_drone::Vehicle{};
+
     // start the rad_drone tasks
-    rad_drone::start(spawner);
-    log::info!("rad_drone started");
-
-    // FIXME
-    spawner.spawn(ping()).unwrap();
-
-    loop {
-        Timer::after(Duration::from_millis(1_000)).await;
-    }
-}
-
-#[embassy_executor::task]
-async fn ping()
-{
-    loop
-    {
-        log::debug!("ping");
-        Timer::after(Duration::from_millis(1_000)).await;
-    }
+    rad_drone::start(spawner, vehicle);
 }
