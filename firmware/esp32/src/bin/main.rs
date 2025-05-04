@@ -31,7 +31,10 @@ async fn main(spawner: embassy_executor::Spawner)
     }
 
     // initialize logger
-    esp_println::logger::init_logger_from_env();
+#[cfg(debug_assertions)]
+    esp_println::logger::init_logger(log::LevelFilter::Debug);
+#[cfg(not(debug_assertions))]
+    esp_println::logger::init_logger(log::LevelFilter::Info);
 
     // start the rad_drone tasks
     rad_drone::start(spawner);
