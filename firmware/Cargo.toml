@@ -13,6 +13,10 @@ embassy-time = "*"
 embassy-executor = "*"
 log = "*"
 
+# imu = "*" Doesn't currently support nostd
+imu = { git="https://github.com/redengin/imu" }
+# ahrs = "*"
+
 # FIXME static_cell      = { version = "2.1.0", features = ["nightly"] }
 # static_cell = "2.1"
 # heapless         = { version = "0.8.0", default-features = false, features = [ "portable-atomic", ] }

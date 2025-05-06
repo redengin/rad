@@ -4,17 +4,27 @@
 pub use embassy_time as time;
 pub use log;
 
-mod flight_controller;
 
 // export rad_drone abstractions for start()
 // pub use gps;
 // pub use imu;
 // pub use motors;
 
+
+// pub struct Location
+// {
+//     longitude:  f32,
+//     latitude:   f32,
+//     altitude:   f32,
+// }
+
+
+pub mod imu;
+
 pub struct Vehicle {
 
 }
-
+mod flight_controller;
 pub fn start(spawner: embassy_executor::Spawner, vehicle: Vehicle) {
     // dummy demo
     log::info!("dummy starting....");
