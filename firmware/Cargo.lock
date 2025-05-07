@@ -168,13 +168,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b9e0384b61958566e926dc50660321d12159025e767c18e043daf26b70104c39"
 
 [[package]]
-name = "imu-traits"
-version = "0.0.2"
-dependencies = [
- "log",
-]
-
-[[package]]
 name = "litrs"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -237,7 +230,6 @@ version = "0.0.0"
 dependencies = [
  "embassy-executor",
  "embassy-time",
- "imu-traits",
  "log",
 ]
 

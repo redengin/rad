@@ -16,7 +16,8 @@ log = "*"
 # imu = "*" Doesn't currently support nostd
 # imu = { git="https://github.com/redengin/imu" }
 # imu = { path="imu/imu" }
-imu-traits = { path="imu/imu/imu-traits", features=["nostd"] }
+# imu-traits = { path="imu/imu/imu-traits", features=["nostd"] }
+# imu-bmi088 = { path="imu/imu/drivers/bmi088", features=["nostd"] }
 # ahrs = "*"
 
 # FIXME static_cell      = { version = "2.1.0", features = ["nightly"] }

@@ -1,3 +1,0 @@
-[submodule "firmware/imu"]
-	path = firmware/imu
-	url = git@github.com:redengin/imu.git
