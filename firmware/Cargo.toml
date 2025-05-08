@@ -13,11 +13,7 @@ embassy-time = "*"
 embassy-executor = "*"
 log = "*"
 
-# imu = "*" Doesn't currently support nostd
-# imu = { git="https://github.com/redengin/imu" }
-# imu = { path="imu/imu" }
-# imu-traits = { path="imu/imu/imu-traits", features=["nostd"] }
-# imu-bmi088 = { path="imu/imu/drivers/bmi088", features=["nostd"] }
+
 # ahrs = "*"
 
 # FIXME static_cell      = { version = "2.1.0", features = ["nightly"] }
@@ -32,3 +28,6 @@ log = "*"
 # edge-nal-embassy = "0.5"
 # edge-nal = "0.5"
 # edge-dhcp = "0.5"
+
+[features]
+high_precision = [] # use f64 instead of f32
