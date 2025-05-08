@@ -5,7 +5,9 @@
 
 use crate::{Float, Vector3, Quaternion};
 
-/// standard IMU data
+/// standard IMU hardware data
+/// 
+/// IMU Drivers should only provide direct measurements
 #[derive(Debug, Clone, Copy, Default)]
 pub struct ImuData {
     /// Acceleration including gravity (m/s²)
@@ -16,10 +18,13 @@ pub struct ImuData {
     pub magnetometer: Option<Vector3>,
     /// Temperature (°C)
     pub temperature: Option<Float>,
-    /// Orientation as a unit quaternion (WXYZ order)
+// TODO provide an Orientation enum to handle variants
+//------------------------------------------------------------------------------
+    /// Orientation as a unit quaternion
     pub quaternion: Option<Quaternion>,
     /// Orientation as Euler angles (deg)
     pub euler: Option<Vector3>,
+//------------------------------------------------------------------------------
     /// Linear acceleration (acceleration without gravity) (m/s²)
     pub linear_acceleration: Option<Vector3>,
     /// Estimated gravity vector (m/s²)
@@ -29,12 +34,14 @@ pub struct ImuData {
 pub trait ImuReader {
     /// Calibrate the IMU (only called while the vehicle is stationary)
     /// 
-    /// IMU driver should
+    /// IMU driver should log errors
     /// - run calibration routines
     /// - enter low-power mode
-    fn calibrate(&self);
+    fn calibrate(&self) -> bool;
 
     /// put the IMU into sensing mode
+    ///
+    /// IMU driver should log errors
     ///
     /// Will be called after initializing the IMU driver
     fn start(&self);
@@ -45,7 +52,10 @@ pub trait ImuReader {
     fn get_data(&self) -> Option<ImuData>;
 
     /// put the IMU into low-power mode
+    ///
+    /// IMU driver should log errors
     fn stop(&self);
 }
 
-// provide a 
+// provide a dummy implementation
+pub mod imu_dummy;
