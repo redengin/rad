@@ -31,7 +31,7 @@ pub struct ImuData {
     pub gravity: Option<Vector3>,
 }
 
-pub trait ImuReader {
+pub trait Imu {
     /// Calibrate the IMU (only called while the vehicle is stationary)
     /// 
     /// IMU driver should log errors

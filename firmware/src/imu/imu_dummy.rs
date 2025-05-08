@@ -3,13 +3,13 @@
 //! Provides no IMU data
 
 use crate::log;
-use crate::imu::{ImuData, ImuReader};
+use crate::imu;
 
 pub struct ImuDummy {
     // Real implementation would use this for hardware resources and state
 }
 
-impl ImuReader for ImuDummy {
+impl imu::Imu for ImuDummy {
     /// Runs calibration routines
     fn calibrate(&self) -> bool {
         // Real implementation would use the hardware calibration routines    
@@ -24,9 +24,9 @@ impl ImuReader for ImuDummy {
     }
 
     /// Returns the most recent sensor data.
-    fn get_data(&self) -> Option<ImuData> {
+    fn get_data(&self) -> Option<imu::ImuData> {
         log::debug!("Dummy IMU getting data");
-        Some(ImuData::default())
+        Some(imu::ImuData::default())
     }
     
     /// Stops the reading thread.
@@ -36,6 +36,7 @@ impl ImuReader for ImuDummy {
     }
 }
 
+use crate::imu::Imu;    // provide access to stop()
 impl Drop for ImuDummy {
     /// upon release of an IMU driver, put the hardware into low-power mode
     fn drop(&mut self) {
