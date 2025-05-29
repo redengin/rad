@@ -6,7 +6,7 @@ use crate::log;
 use crate::imu;
 
 pub struct ImuDummy {
-    // Real implementation would use this for hardware resources and state
+    // Real implementation would take hardware resources
 }
 
 impl imu::Imu for ImuDummy {
@@ -25,7 +25,7 @@ impl imu::Imu for ImuDummy {
 
     /// Returns the most recent sensor data.
     fn get_data(&self) -> Option<imu::ImuData> {
-        log::debug!("Dummy IMU getting data");
+        log::debug!("Dummy IMU data");
         Some(imu::ImuData::default())
     }
     

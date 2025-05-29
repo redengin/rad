@@ -20,10 +20,13 @@ pub use log;
 // }
 
 
-// export rad_drone abstractions for start()
+// export rad_drone abstractions
 pub mod imu;
+pub mod gps;
+
 pub struct Vehicle<'r> {
-    imu:  &'r mut dyn Imu,
+    imu:  &'r mut dyn crate::imu::Imu,
+    gps:  &'r mut dyn crate::gps::Gps,
 }
 mod flight_controller;
 pub fn start(spawner: embassy_executor::Spawner, vehicle: Vehicle<'static>) {

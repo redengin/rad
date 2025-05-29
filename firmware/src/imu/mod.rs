@@ -8,7 +8,8 @@ use crate::{Float, Vector3, Quaternion};
 /// standard IMU hardware data
 /// 
 /// IMU Drivers should only provide direct measurements
-#[derive(Debug, Clone, Copy, Default)]
+// #[derive(Debug, Clone, Copy, Default)]
+#[derive(Default)]
 pub struct ImuData {
     /// Acceleration including gravity (m/s²)
     pub accelerometer: Option<Vector3>,
