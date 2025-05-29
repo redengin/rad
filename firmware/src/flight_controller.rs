@@ -1,7 +1,7 @@
 use crate::{time::{Duration, Timer}, Vehicle};
 
 #[embassy_executor::task]
-pub async fn thread(_vehicle:Vehicle)
+pub async fn thread(vehicle:Vehicle<'static>)
 {
     loop
     {

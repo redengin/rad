@@ -2,6 +2,7 @@
 
 // re-export shared dependencies
 pub use embassy_time as time;
+use imu::Imu;
 pub use log;
 
 
@@ -19,16 +20,18 @@ pub use log;
 // }
 
 
+// export rad_drone abstractions for start()
 pub mod imu;
-pub struct Vehicle {
-
+pub struct Vehicle<'r> {
+    imu:  &'r mut dyn Imu,
 }
 mod flight_controller;
-pub fn start(spawner: embassy_executor::Spawner, vehicle: Vehicle) {
+pub fn start(spawner: embassy_executor::Spawner, vehicle: Vehicle<'static>) {
     // dummy demo
     log::info!("dummy starting....");
     spawner.spawn(dummy()).unwrap();
 
+    // start the flight controller
     log::info!("starting flight controller...");
     spawner.spawn(flight_controller::thread(vehicle)).unwrap();
     log::info!("flight controller started");

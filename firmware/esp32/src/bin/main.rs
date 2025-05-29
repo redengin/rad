@@ -39,7 +39,10 @@ async fn main(spawner: embassy_executor::Spawner)
     esp_println::logger::init_logger(log::LevelFilter::Info);
 
     // initialize the vehicle
-    let vehicle = rad_drone::Vehicle{};
+    let vehicle = rad_drone::Vehicle{
+        // FIXME choose imu implementation
+        imu: imu_dummy::new()
+    };
 
     // start the rad_drone tasks
     rad_drone::start(spawner, vehicle);
