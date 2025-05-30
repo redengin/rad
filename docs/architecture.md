@@ -1,4 +1,4 @@
-Rust Autonomous Drone Architecture
+Software Architecture
 ================================================================================
 
 ## Flight Controller
