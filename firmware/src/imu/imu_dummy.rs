@@ -24,10 +24,10 @@ impl imu::Imu for ImuDummy {
     }
 
     /// Returns the most recent sensor data.
-    fn get_data(&self) -> Option<imu::ImuData> {
-        log::debug!("Dummy IMU data");
-        Some(imu::ImuData::default())
-    }
+    // fn get_data(&self) -> Option<imu::ImuData> {
+    //     log::debug!("Dummy IMU data");
+    //     Some(imu::ImuData::default())
+    // }
     
     /// Stops the reading thread.
     fn stop(&self) {
