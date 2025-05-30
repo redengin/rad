@@ -7,9 +7,8 @@ distributed computing to increase safety and robustness of the mission.
 
 Hardware Support
 --------------------------------------------------------------------------------
-This implementation is designed to support any hardware.
+This implementation is designed to support any drone.
 
-I currently have a Betaflight F3 and working on an ESP32 based flight
-controller platform.
+[Directly Supported drones](/firmware/drones/README.md)
 
 
