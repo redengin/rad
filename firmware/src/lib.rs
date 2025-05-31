@@ -20,9 +20,9 @@ pub fn start(spawner: embassy_executor::Spawner, vehicle: Vehicle) {
     spawner.spawn(dummy()).unwrap();
 
     // start the flight controller
-    log::info!("starting flight controller...");
-    spawner.spawn(flight_controller::thread(vehicle)).unwrap();
-    log::info!("flight controller started");
+    // log::info!("starting flight controller...");
+    // spawner.spawn(flight_controller::thread(vehicle)).unwrap();
+    // log::info!("flight controller started");
 }
 
 use time::{Duration, Timer};
@@ -43,16 +43,14 @@ type Float = f64;
 #[cfg(not(feature="high_precision"))]
 type Float = f32;
 
-// Three-Dimensional(x,y,z) data
-#[derive(Debug, Clone, Copy, Default, PartialEq)]
-pub struct Vector3 {
-    pub x: Float,
-    pub y: Float,
-    pub z: Float,
+/// Range of altitude that is **not** safe for maneuvers
+struct UnsafeAltitudeRange {
+    min: Float,
+    max: Float,
 }
-impl Vector3 {
-    pub fn new(x: Float, y: Float, z: Float) -> Self {
-        Self { x, y, z }
-    }
+
+struct Waypoint {
+    latitude:   Float,
+    longitude:  Float,
+    altitude:   Float,
 }
-// TODO provide no_std to_string()

@@ -1,5 +1,5 @@
 [package]
-name    = "rad-drone"
+name = "rad-drone"
 version = "0.0.0"
 edition = "2021"
 license = "Apache-2.0"
@@ -13,8 +13,10 @@ embassy-time = "*"
 embassy-executor = "*"
 log = "*"
 
+# flight controller dependencies
+ahrs = { version = "*", default-features = false, optional = true }
+dcmimu = { version = "*", optional = true }
 
-# ahrs = "*"
 
 # FIXME static_cell      = { version = "2.1.0", features = ["nightly"] }
 # static_cell = "2.1"
@@ -30,4 +32,11 @@ log = "*"
 # edge-dhcp = "0.5"
 
 [features]
+default = ["ahrs_mahoney"]
+
 high_precision = [] # use f64 instead of f32
+
+# choice of ahrs implementation
+ahrs_madgwick = ["ahrs"] # better accuracy but requires more processing power
+ahrs_mahoney = ["ahrs"]  # least processor intensive
+ahrs_dcmimu = ["dcmimu"] # use multiple IMU sensors

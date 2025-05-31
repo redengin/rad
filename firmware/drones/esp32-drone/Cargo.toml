@@ -10,7 +10,7 @@ name = "rad-esp32"
 path = "./src/bin/main.rs"
 
 [dependencies]
-rad-drone = { path=".." }
+rad-drone = { path="../.." }
 
 # ESP 32 dependencies
 esp-hal = { version="0.23.1", features=["log"] }
