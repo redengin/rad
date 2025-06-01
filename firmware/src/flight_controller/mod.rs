@@ -1,8 +1,6 @@
 //! Flight Controller
 //==============================================================================
 
-use crate::UnsafeAltitudeRange;
-
 /// Flight Controller modes
 enum Mode {
     /// default state - will introspect current position to determine next mode
@@ -17,7 +15,7 @@ enum Mode {
 
 /// Attempt maneuver to a waypoint by a deadline(time duration)
 pub struct Maneuver {
-    waypoint: crate::Waypoint,
+    waypoint: crate::Position,
     deadline: crate::Duration,
 }
 
@@ -28,17 +26,16 @@ struct ManeuverOperation {
 }
 
 struct FlightController {
-    unsafe_altitude_range: UnsafeAltitudeRange,
     mode: Mode,
     manuever_operation: Option<ManeuverOperation>,
 }
 
-impl FlightController {
-    fn new(unsafe_altitude_range: UnsafeAltitudeRange) -> FlightController {
-        FlightController {
-            unsafe_altitude_range: unsafe_altitude_range,
-            mode: Mode::Unknown,
-            manuever_operation: None,
-        }
-    }
-}
+// impl FlightController {
+//     fn new(unsafe_altitude_range: UnsafeAltitudeRange) -> FlightController {
+//         FlightController {
+//             unsafe_altitude_range: unsafe_altitude_range,
+//             mode: Mode::Unknown,
+//             manuever_operation: None,
+//         }
+//     }
+// }

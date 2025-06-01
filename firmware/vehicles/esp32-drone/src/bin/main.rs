@@ -2,7 +2,7 @@
 #![no_main]
 // use re-exported dependencies
 use rad_drone::log;
-use rad_drone::time::{Duration, Timer};
+// use rad_drone::time::{Duration, Timer};
 
 // provide no_std support
 use esp_backtrace as _; // implements panic
@@ -13,9 +13,9 @@ use esp_alloc as _;
 
 
 #[esp_hal_embassy::main]
-async fn main(spawner: embassy_executor::Spawner)
+async fn main(_spawner: embassy_executor::Spawner)
 {
-    // initialize peripherals
+    // initialize SoC
     let peripherals = esp_hal::init(
         esp_hal::Config::default()
             // .with_cpu_clock(esp_hal::clock::CpuClock::max())
@@ -38,6 +38,13 @@ async fn main(spawner: embassy_executor::Spawner)
 #[cfg(not(debug_assertions))]
     esp_println::logger::init_logger(log::LevelFilter::Info);
 
+    // create the vehicle
+    let gps_uart_config = Config::default();
+    let mut gps_uart = esp_hal::uart::Uart::new(peripherals.UART0, gps_uart_config).unwrap();
+    let vehicle = Esp32Drone {
+        gps_uart: gps_uart.into_async(),
+    };
+
     // // initialize the vehicle
     // let vehicle = rad_drone::Vehicle{
     //     // FIXME choose imu implementation
@@ -46,4 +53,19 @@ async fn main(spawner: embassy_executor::Spawner)
 
     // // start the rad_drone tasks
     // rad_drone::start(spawner, vehicle);
+}
+
+use esp_hal::{peripherals::Peripherals, uart::Config};
+struct Esp32Drone {
+    gps_uart: esp_hal::uart::Uart<'static, esp_hal::Async>,
+}
+
+impl rad_drone::gps::GpsDriver for Esp32Drone {
+    fn enable(&self) {
+
+    }
+
+    fn disable(&self) {
+
+    }
 }

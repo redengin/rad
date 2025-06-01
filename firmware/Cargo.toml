@@ -13,6 +13,14 @@ embassy-time = "*"
 embassy-executor = "*"
 log = "*"
 
+# gps dependencies
+# embedded-hal = "*"
+# embedded-io = "*"
+nmea = { version = "*", default-features = false, features=[
+        # NMEA Sentences
+        "GLL", "RMC", "VTG", "GGA", "GSA", "GSV"
+]}
+
 # flight controller dependencies
 ahrs = { version = "*", default-features = false, optional = true }
 dcmimu = { version = "*", optional = true }
