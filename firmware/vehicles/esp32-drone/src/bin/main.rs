@@ -40,7 +40,10 @@ async fn main(_spawner: embassy_executor::Spawner)
 
     // create the vehicle
     let gps_uart_config = Config::default();
-    let mut gps_uart = esp_hal::uart::Uart::new(peripherals.UART0, gps_uart_config).unwrap();
+    let gps_uart = esp_hal::uart::Uart::new(peripherals.UART0, gps_uart_config).unwrap();
+
+
+
     let vehicle = Esp32Drone {
         gps_uart: gps_uart.into_async(),
     };
