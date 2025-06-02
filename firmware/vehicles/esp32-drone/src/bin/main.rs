@@ -6,47 +6,49 @@ use rad_drone::log;
 
 // provide no_std support
 use esp_backtrace as _; // implements panic
-// override panic's halt to perform a software reset
+                        // override panic's halt to perform a software reset
 #[unsafe(no_mangle)]
-pub extern "C" fn custom_halt() { esp_hal::reset::software_reset(); }
+pub extern "C" fn custom_halt() {
+    esp_hal::reset::software_reset();
+}
+// provide required alloc implementation
 use esp_alloc as _;
 
+use vehicle;
 
 #[esp_hal_embassy::main]
-async fn main(_spawner: embassy_executor::Spawner)
-{
+async fn main(_spawner: embassy_executor::Spawner) {
     // initialize SoC
     let peripherals = esp_hal::init(
-        esp_hal::Config::default()
-            // .with_cpu_clock(esp_hal::clock::CpuClock::max())
+        esp_hal::Config::default(), // .with_cpu_clock(esp_hal::clock::CpuClock::max())
     );
 
     // initialize embassy scheduler
-    #[cfg(feature = "esp32")] {
+    #[cfg(feature = "esp32")]
+    {
         let timg1 = esp_hal::timer::timg::TimerGroup::new(peripherals.TIMG1);
         esp_hal_embassy::init(timg1.timer0);
     }
-    #[cfg(not(feature = "esp32"))] {
+    #[cfg(not(feature = "esp32"))]
+    {
         use esp_hal::timer::systimer::SystemTimer;
         let systimer = SystemTimer::new(peripherals.SYSTIMER);
         esp_hal_embassy::init(systimer.alarm0);
     }
 
     // initialize logger
-#[cfg(debug_assertions)]
+    #[cfg(debug_assertions)]
     esp_println::logger::init_logger(log::LevelFilter::Debug);
-#[cfg(not(debug_assertions))]
+    #[cfg(not(debug_assertions))]
     esp_println::logger::init_logger(log::LevelFilter::Info);
 
     // create the vehicle
-    let gps_uart_config = Config::default();
-    let gps_uart = esp_hal::uart::Uart::new(peripherals.UART0, gps_uart_config).unwrap();
+    let gps_uart = esp_hal::uart::Uart::new(peripherals.UART0, vehicle::gps_uart_config())
+        .unwrap()
+        .with_tx(peripherals.GPIO1) // GPS Tx Pin
+        .with_rx(peripherals.GPIO3) // GPS Rx Pin
+        .into_async();
 
-
-
-    let vehicle = Esp32Drone {
-        gps_uart: gps_uart.into_async(),
-    };
 
     // // initialize the vehicle
     // let vehicle = rad_drone::Vehicle{
@@ -58,17 +60,17 @@ async fn main(_spawner: embassy_executor::Spawner)
     // rad_drone::start(spawner, vehicle);
 }
 
-use esp_hal::{peripherals::Peripherals, uart::Config};
-struct Esp32Drone {
-    gps_uart: esp_hal::uart::Uart<'static, esp_hal::Async>,
-}
+// use esp_hal::{peripherals::Peripherals, uart::Config};
+// struct Esp32Drone {
+//     gps_uart: esp_hal::uart::Uart<'static, esp_hal::Async>,
+// }
 
-impl rad_drone::gps::GpsDriver for Esp32Drone {
-    fn enable(&self) {
+// impl rad_drone::gps::GpsDriver for Esp32Drone {
+//     fn enable(&self) {
 
-    }
+//     }
 
-    fn disable(&self) {
+//     fn disable(&self) {
 
-    }
-}
+//     }
+// }

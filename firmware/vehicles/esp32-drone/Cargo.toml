@@ -5,6 +5,10 @@ edition = "2021"
 license = "Apache-2.0"
 publish = false
 
+[lib]
+name = "vehicle"
+path = "./src/vehicle.rs"
+
 [[bin]]
 name = "rad-esp32"
 path = "./src/bin/main.rs"
