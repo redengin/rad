@@ -56,6 +56,14 @@ async fn main(_spawner: embassy_executor::Spawner) {
         peripherals.GPIO14, // IMU SPI CLK
         peripherals.GPIO13, // IMU SPI MOSI
         peripherals.GPIO12, // IMU SPI MISO
+        // motors ESC interface
+        // FIXME
+        // peripherals.MCPWM0,
+        // peripherals.MCPWM1,
+        peripherals.GPIO8,      // Motor A ESC pin 
+        peripherals.GPIO9,      // Motor B ESC pin 
+        peripherals.GPIO10,     // Motor C ESC pin 
+        peripherals.GPIO11,     // Motor D ESC pin 
     );
 
     // // connect the GPS
