@@ -28,7 +28,7 @@ pub fn imu_spi_config() -> esp_hal::spi::master::Config {
 
 pub struct Esp32Drone {
     gps: esp_hal::uart::Uart<'static, esp_hal::Async>,
-    // imu: esp_hal::spi::master::SpiDma<'static, esp_hal::Async>
+    imu: esp_hal::spi::master::Spi<'static, esp_hal::Async>
 }
 
 use esp_hal::gpio::interconnect::{PeripheralInput, PeripheralOutput};
@@ -71,7 +71,7 @@ impl Esp32Drone {
 
         Esp32Drone {
             gps: gps_uart,
-            // imu: imu,
+            imu: imu,
          }
     }
 }
