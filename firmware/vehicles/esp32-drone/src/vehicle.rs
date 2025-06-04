@@ -1,11 +1,11 @@
 #![no_std]
 //! Hardware Configuration for the Vehicle
-///=============================================================================
-use esp_hal::{uart, spi, mcpwm};
+use esp_hal::gpio::interconnect::{PeripheralInput, PeripheralOutput};
+use esp_hal::peripheral::Peripheral;
 use esp_hal::Async;
 use esp_hal::{dma, dma_buffers};
-use esp_hal::peripheral::Peripheral;
-use esp_hal::gpio::interconnect::{PeripheralInput, PeripheralOutput};
+///=============================================================================
+use esp_hal::{mcpwm, spi, uart};
 
 // TODO use a rad_drone gps driver's data
 pub fn gps_uart_config() -> uart::Config {
@@ -138,5 +138,7 @@ impl Esp32Drone {
 
 /// provide the Vehicle abstraction
 impl rad_drone::vehicle::Vehicle for Esp32Drone {
-
+    fn gps_serial_read_async(&mut self, buf: &mut[u8]) {
+        self.gps.read_bytes(buf).unwrap()
+    }
 }
