@@ -1,5 +1,6 @@
 #![no_std]
 //! Hardware Configuration for the Vehicle
+use esp_hal::dma::DmaChannelFor;
 ///=============================================================================
 use esp_hal::uart;
 
@@ -28,24 +29,24 @@ pub fn imu_spi_config() -> esp_hal::spi::master::Config {
 
 pub struct Esp32Drone {
     gps: esp_hal::uart::Uart<'static, esp_hal::Async>,
-    imu: esp_hal::spi::master::Spi<'static, esp_hal::Async>,
+    imu: esp_hal::spi::master::SpiDmaBus<'static, esp_hal::Async>,
 }
 
 use esp_hal::gpio::interconnect::{PeripheralInput, PeripheralOutput};
 use esp_hal::peripheral::Peripheral;
 // use esp_hal::uart;
-use esp_hal::spi;
 use esp_hal::mcpwm;
+use esp_hal::spi;
 
 impl Esp32Drone {
-    pub fn new(
+    pub fn new<SpiDmaCh>(
         // gps
         gps_uart: impl Peripheral<P = impl uart::Instance> + 'static,
         gps_tx_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,
         gps_rx_pin: impl Peripheral<P = impl PeripheralInput> + 'static,
         // imu
         imu_spi: impl Peripheral<P = impl spi::master::PeripheralInstance> + 'static,
-        // imu_dma: impl Peripheral<P = spi::master::SpiDma + 'static,
+        imu_dma: impl Peripheral<P = SpiDmaCh> + 'static,
         imu_sck: impl Peripheral<P = impl PeripheralOutput> + 'static,
         imu_mosi: impl Peripheral<P = impl PeripheralOutput> + 'static,
         imu_miso: impl Peripheral<P = impl PeripheralInput> + 'static,
@@ -55,7 +56,10 @@ impl Esp32Drone {
         _esc_b_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,
         _esc_c_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,
         _esc_d_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,
-    ) -> Self {
+    ) -> Self
+    where
+        SpiDmaCh: DmaChannelFor<spi::AnySpi>,
+    {
         // configure GPS hardware interface
         let gps_uart = uart::Uart::new(gps_uart, gps_uart_config())
             .unwrap()
@@ -64,17 +68,17 @@ impl Esp32Drone {
             .into_async();
         // configure IMU hardware interface
         // create DMA buffers
-        // let (rx_buffer, rx_descriptors, tx_buffer, tx_descriptors) = esp_hal::dma_buffers!(32000);
-        // let dma_rx_buf = esp_hal::dma::DmaRxBuf::new(rx_descriptors, rx_buffer).unwrap();
-        // let dma_tx_buf = esp_hal::dma::DmaTxBuf::new(tx_descriptors, tx_buffer).unwrap();
+        let (rx_buffer, rx_descriptors, tx_buffer, tx_descriptors) = esp_hal::dma_buffers!(32000);
+        let dma_rx_buf = esp_hal::dma::DmaRxBuf::new(rx_descriptors, rx_buffer).unwrap();
+        let dma_tx_buf = esp_hal::dma::DmaTxBuf::new(tx_descriptors, tx_buffer).unwrap();
         let imu = esp_hal::spi::master::Spi::new(imu_spi, imu_spi_config())
             .unwrap()
             .with_sck(imu_sck) // IMU SPI-CLK
             .with_mosi(imu_mosi) // IMU SPI-MOSI
             .with_miso(imu_miso) // IMU SPI-MISO
             // .with_cs(peripherals.GPIO5)  // IMU SPI-CS
-            // .with_dma(imu_dma)
-            // .with_buffers(dma_rx_buf, dma_tx_buf)
+            .with_dma(imu_dma)
+            .with_buffers(dma_rx_buf, dma_tx_buf)
             .into_async();
 
         Esp32Drone {

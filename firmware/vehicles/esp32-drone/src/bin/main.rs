@@ -52,7 +52,7 @@ async fn main(_spawner: embassy_executor::Spawner) {
         // IMU interface
         peripherals.SPI2,
         // FIXME use DMA - hal semantics are confusing
-        // peripherals.DMA_SPI2,
+        peripherals.DMA_SPI2,
         peripherals.GPIO14, // IMU SPI CLK
         peripherals.GPIO13, // IMU SPI MOSI
         peripherals.GPIO12, // IMU SPI MISO
