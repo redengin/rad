@@ -30,15 +30,19 @@ pub fn imu_spi_config() -> esp_hal::spi::master::Config {
 
 // TODO use rad_drone esc driver's config value
 const ESC_PWM_HZ: u32 = 50;
-/// determines rate of the pwm master clock 
+// TODO use rad_drone esc driver's config value
+const ESC_MAX_DUTY_CYCLE: u16 = 100;
+/// determines rate of the pwm master clock
 ///     (this * ESC_PWM_HZ) = master clock frequency
 ///     (lower pwm master clock frequency is expected to conserve power)
-const ESC_PWM_MASTER_OVERSAMPLING_SCALAR: u32 = 1;  // Nyquist = 2
+const ESC_PWM_MASTER_OVERSAMPLING_SCALAR: u32 = 1; // Nyquist = 2
 
+/// rad_drone::Vehicle
 pub struct Esp32Drone {
     gps: uart::Uart<'static, esp_hal::Async>,
     imu: spi::master::SpiDmaBus<'static, esp_hal::Async>,
-    // esc_a_pwm: mcpwm::operator::PwmPin<'static, mcpwm::operator::PwmPin, 0, true>,
+    // FIXME what is a PwmPin
+    // esc_a_pwm: dyn mcpwm::PwmPeripheral,
 }
 
 impl Esp32Drone {
@@ -89,14 +93,17 @@ impl Esp32Drone {
             .into_async();
 
         // configure ESC hardware interfaces
-        let pwm_clock_cfg =
-            mcpwm::PeripheralClockConfig::with_frequency(esp_hal::time::RateExtU32::Hz(ESC_PWM_HZ * ESC_PWM_MASTER_OVERSAMPLING_SCALAR))
-                .unwrap();
-        let timer_clock_cfg = pwm_clock_cfg.timer_clock_with_frequency(
-            100,    // output duty cycle range [0..100]
-            mcpwm::timer::PwmWorkingMode::Increase,
-            esp_hal::time::RateExtU32::Hz(ESC_PWM_HZ),
-        ).unwrap();
+        let pwm_clock_cfg = mcpwm::PeripheralClockConfig::with_frequency(
+            esp_hal::time::RateExtU32::Hz(ESC_PWM_HZ * ESC_PWM_MASTER_OVERSAMPLING_SCALAR),
+        )
+        .unwrap();
+        let timer_clock_cfg = pwm_clock_cfg
+            .timer_clock_with_frequency(
+                ESC_MAX_DUTY_CYCLE, // output duty cycle range [0..ESC_MAX_DUTY_CYCLE]
+                mcpwm::timer::PwmWorkingMode::Increase,
+                esp_hal::time::RateExtU32::Hz(ESC_PWM_HZ),
+            )
+            .unwrap();
         // create 3 pwm controllers on first mcpwm device
         let mut mcpwmA = mcpwm::McPwm::new(pwm_a, pwm_clock_cfg);
         // configure timer0 (default for all operator channels)
