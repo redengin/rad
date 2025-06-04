@@ -18,7 +18,7 @@ use rad_drone::log;
 use vehicle::Esp32Drone;
 
 #[esp_hal_embassy::main]
-async fn main(_spawner: embassy_executor::Spawner) {
+async fn main(spawner: embassy_executor::Spawner) {
     // initialize SoC (with max compute - aka cpu_clock frequency)
     let peripherals =
         esp_hal::init(esp_hal::Config::default().with_cpu_clock(esp_hal::clock::CpuClock::max()));
@@ -64,5 +64,5 @@ async fn main(_spawner: embassy_executor::Spawner) {
     );
 
     // start the rad_drone tasks
-    // rad_drone::start(spawner, vehicle);
+    rad_drone::start(spawner, vehicle);
 }

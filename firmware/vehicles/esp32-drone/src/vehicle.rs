@@ -135,3 +135,8 @@ impl Esp32Drone {
         }
     }
 }
+
+/// provide the Vehicle abstraction
+impl rad_drone::vehicle::Vehicle for Esp32Drone {
+
+}
