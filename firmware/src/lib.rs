@@ -6,21 +6,12 @@ pub use log;
 pub mod vehicle;
 
 use crate::vehicle::Vehicle;
-pub fn start<VEHICLE>(spwaner: embassy_executor::Spawner, vehicle: VEHICLE)
+pub fn start<VEHICLE>(_spawner: embassy_executor::Spawner, _vehicle: VEHICLE)
     where VEHICLE: Vehicle,
 {
 
 }
 
-// FIXME
-// // export rad_drone abstractions
-// // pub mod imu;
-// pub mod gps;
-
-// pub struct Vehicle {
-//     // imu:  &'r mut dyn crate::imu::Imu,
-//     // gps:  &'r mut dyn crate::gps::Gps,
-// }
 // mod flight_controller;
 // pub fn start(spawner: embassy_executor::Spawner, vehicle: Vehicle) {
 //     // dummy demo
