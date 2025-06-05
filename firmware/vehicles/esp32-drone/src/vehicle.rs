@@ -138,7 +138,39 @@ impl Esp32Drone {
 
 /// provide the Vehicle abstraction
 impl rad_drone::vehicle::Vehicle for Esp32Drone {
-    fn gps_read_async(&mut self, buf: &mut[u8]) {
-        self.gps.read_bytes(buf).unwrap()
+    fn gps_read(&mut self, _buf: &mut[u8]) {
+        // FIXME
+        // self.gps.read_async(buf)
+    }
+
+    fn imu_read_gyroscopes(&self) -> rad_drone::Vector3 {
+        // TODO
+        rad_drone::Vector3{x:0.0, y:0.0, z:0.0}
+    }
+
+    fn imu_read_accelerometers(&self) -> rad_drone::Vector3 {
+        // TODO
+        rad_drone::Vector3{x:0.0, y:0.0, z:0.0}
+    }
+
+    fn imu_read_magnetometers(&self) -> rad_drone::Vector3 {
+        // TODO
+        rad_drone::Vector3{x:0.0, y:0.0, z:0.0}
+    }
+
+    fn motor_a_duty(&self, _duty_cycle: u8) {
+       // TODO 
+    }
+
+    fn motor_b_duty(&self, _duty_cycle: u8) {
+       // TODO 
+    }
+
+    fn motor_c_duty(&self, _duty_cycle: u8) {
+       // TODO 
+    }
+
+    fn motor_d_duty(&self, _duty_cycle: u8) {
+       // TODO 
     }
 }

@@ -24,6 +24,7 @@ nmea = { version = "*", default-features = false, features=[
 # flight controller dependencies
 ahrs = { version = "*", default-features = false, optional = true }
 dcmimu = { version = "*", optional = true }
+async-trait = "*"
 
 
 # FIXME static_cell      = { version = "2.1.0", features = ["nightly"] }

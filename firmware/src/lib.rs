@@ -47,10 +47,15 @@ pub fn start<VEHICLE>(spwaner: embassy_executor::Spawner, vehicle: VEHICLE)
 
 // choose floating point size
 #[cfg(feature="high_precision")]
-type Float = f64;
+pub type Float = f64;
 #[cfg(not(feature="high_precision"))]
-type Float = f32;
+pub type Float = f32;
 
+pub struct Vector3 {
+    pub x: Float,
+    pub y: Float,
+    pub z: Float,
+}
 
 // FIXME
 // struct Position {
