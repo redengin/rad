@@ -28,6 +28,9 @@ esp-alloc = "*"
 esp-println = { version="*", features = ["log"] }
 esp-hal-embassy = "*"
 embassy-executor = { version = "*", features = ["task-arena-size-20480"] } # FIXME import from rad-drone (not currently supported)
+static_cell = "*"
+
+esp-wifi = { version="*", features=["wifi"], optional = true }
 # esp-wifi = { git="https://github.com/esp-rs/esp-hal.git", tag="v0.23.1", features=["wifi"] }
 # esp-storage = { git="https://github.com/esp-rs/esp-hal.git", tag="v0.23.1", optional=true }
 # esp-ieee802154 = { git="https://github.com/esp-rs/esp-hal.git", tag="v0.23.1", optional=true }
@@ -35,7 +38,7 @@ embassy-executor = { version = "*", features = ["task-arena-size-20480"] } # FIX
 
 [features]
 default = ["esp32"]
-esp32 = ["esp-hal/esp32", "esp-backtrace/esp32", "esp-println/esp32", "esp-hal-embassy/esp32" ]
+esp32 = ["esp-hal/esp32", "esp-backtrace/esp32", "esp-println/esp32", "esp-hal-embassy/esp32", "esp-wifi/esp32" ]
 # esp32 = ["esp-hal/esp32", "esp-backtrace/esp32", "esp-println/esp32", esp-hal-embassy/esp32", "esp-wifi/esp32" ]
 
 

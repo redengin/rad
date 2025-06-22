@@ -58,9 +58,9 @@ impl Esp32Drone {
         imu_miso: impl Peripheral<P = impl PeripheralInput> + 'static,
         // motors
         // pwm_a: impl Peripheral<P = PWMA> + 'static,
-        pwm_a: impl Peripheral<P = impl mcpwm::PwmPeripheral> + 'static,
+        _pwm_a: impl Peripheral<P = impl mcpwm::PwmPeripheral> + 'static,
         _pwm_b: impl Peripheral<P = impl mcpwm::PwmPeripheral> + 'static,
-        esc_a_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,
+        _esc_a_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,
         _esc_b_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,
         _esc_c_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,
         _esc_d_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,

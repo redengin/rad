@@ -17,6 +17,17 @@ use rad_drone::log;
 // use local vehicle implementation
 use vehicle::Esp32Drone;
 
+
+// When you are okay with using a nightly compiler it's better to use https://docs.rs/static_cell/2.1.0/static_cell/macro.make_static.html
+macro_rules! mk_static {
+    ($t:ty,$val:expr) => {{
+        static STATIC_CELL: static_cell::StaticCell<$t> = static_cell::StaticCell::new();
+        #[deny(unused_attributes)]
+        let x = STATIC_CELL.uninit().write(($val));
+        x
+    }};
+}
+
 #[esp_hal_embassy::main]
 async fn main(spawner: embassy_executor::Spawner) {
     // initialize SoC (with max compute - aka cpu_clock frequency)
@@ -40,6 +51,26 @@ async fn main(spawner: embassy_executor::Spawner) {
     esp_println::logger::init_logger(log::LevelFilter::Debug);
     #[cfg(not(debug_assertions))]
     esp_println::logger::init_logger(log::LevelFilter::Info);
+    
+    // initialize networking
+    esp_alloc::heap_allocator!(72 * 1024);
+    let timg0 = esp_hal::timer::timg::TimerGroup::new(peripherals.TIMG0);
+    let mut rng = esp_hal::rng::Rng::new(peripherals.RNG);
+    let esp_wifi_ctrl = &*mk_static!(
+        esp_wifi::EspWifiController<'static>,
+        esp_wifi::init(timg0.timer0, rng.clone(), peripherals.RADIO_CLK).unwrap()
+    );
+    let (wifi_ap, wifi_sta, wifi_controller) =
+        esp_wifi::wifi::new_ap_sta(&esp_wifi_ctrl, peripherals.WIFI).unwrap();
+    // Init network stack
+    // let seed = (rng.random() as u64) << 32 | rng.random() as u64;
+    // let (stack, runner) = embassy_net::new(
+    //     wifi_ap,
+    //     config,
+    //     mk_static!(StackResources<3>, StackResources::<3>::new()),
+    //     seed,
+    // );
+
 
     // create the vehicle
     let vehicle = Esp32Drone::new(
