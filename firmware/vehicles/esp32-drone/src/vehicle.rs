@@ -27,13 +27,13 @@ pub fn imu_spi_config() -> spi::master::Config {
         .with_mode(spi::Mode::_0)
 }
 
-// // TODO use rad_drone esc driver's config value
+// TODO use rad_drone esc driver's config value
 // const ESC_PWM_HZ: u32 = 50;
-// // TODO use rad_drone esc driver's config value
+// TODO use rad_drone esc driver's config value
 // const ESC_MAX_DUTY_CYCLE: u16 = 100;
-// /// determines rate of the pwm master clock
-// ///     (this * ESC_PWM_HZ) = master clock frequency
-// ///     (lower pwm master clock frequency is expected to conserve power)
+/// determines rate of the pwm master clock
+///     (this * ESC_PWM_HZ) = master clock frequency
+///     (lower pwm master clock frequency is expected to conserve power)
 // const ESC_PWM_MASTER_OVERSAMPLING_SCALAR: u32 = 1; // Nyquist = 2
 
 /// rad_drone::Vehicle
@@ -41,11 +41,11 @@ pub struct Esp32Drone {
     gps: uart::Uart<'static, Async>,
     imu: spi::master::SpiDmaBus<'static, Async>,
     // FIXME what is a PwmPin
-    // esc_a_pwm: dyn mcpwm::PwmPeripheral,
+    // esc_a_pwm: mcpwm::operator::PwmPin<'static, dyn mcpwm::PwmPeripheral, 0, true>,
 }
 
 impl Esp32Drone {
-    pub fn new<SpiDmaCh, PWMA, PWMB>(
+    pub fn new<SpiDmaCh>(
         // gps
         gps_uart: impl Peripheral<P = impl uart::Instance> + 'static,
         gps_tx_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,
@@ -57,17 +57,16 @@ impl Esp32Drone {
         imu_mosi: impl Peripheral<P = impl PeripheralOutput> + 'static,
         imu_miso: impl Peripheral<P = impl PeripheralInput> + 'static,
         // motors
-        _pwm_a: impl Peripheral<P = PWMA> + 'static,
-        _pwm_b: impl Peripheral<P = PWMB> + 'static,
-        _esc_a_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,
+        // pwm_a: impl Peripheral<P = PWMA> + 'static,
+        pwm_a: impl Peripheral<P = impl mcpwm::PwmPeripheral> + 'static,
+        _pwm_b: impl Peripheral<P = impl mcpwm::PwmPeripheral> + 'static,
+        esc_a_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,
         _esc_b_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,
         _esc_c_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,
         _esc_d_pin: impl Peripheral<P = impl PeripheralOutput> + 'static,
     ) -> Self
     where
         SpiDmaCh: dma::DmaChannelFor<spi::AnySpi>,
-        PWMA: mcpwm::PwmPeripheral,
-        PWMB: mcpwm::PwmPeripheral,
     {
         // configure GPS hardware interface
         let gps_uart = uart::Uart::new(gps_uart, gps_uart_config())
@@ -107,7 +106,7 @@ impl Esp32Drone {
         // let mut mcpwm_a = mcpwm::McPwm::new(pwm_a, pwm_clock_cfg);
         // // configure timer0 (default for all operator channels)
         // mcpwm_a.timer0.start(timer_clock_cfg);
-        // let mut esc_a_pwm = mcpwm_a.operator0.with_pin_a(
+        // let esc_a_pwm = mcpwm_a.operator0.with_pin_a(
         //     esc_a_pin, // MOTOR-A speed controller pin
         //     mcpwm::operator::PwmPinConfig::UP_ACTIVE_HIGH,
         // );
@@ -131,6 +130,7 @@ impl Esp32Drone {
         Esp32Drone {
             gps: gps_uart,
             imu: imu,
+            // FIXME
             // esc_a_pwm: esc_a_pwm,
         }
     }
