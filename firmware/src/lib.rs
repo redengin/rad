@@ -1,6 +1,7 @@
 #![no_std]
 
 // re-export shared dependencies
+pub use embassy_net as embassy_net;
 pub use embassy_time as time;
 pub use log;
 pub mod vehicle;

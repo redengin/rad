@@ -38,8 +38,8 @@ pub fn imu_spi_config() -> spi::master::Config {
 
 /// rad_drone::Vehicle
 pub struct Esp32Drone {
-    gps: uart::Uart<'static, Async>,
-    imu: spi::master::SpiDmaBus<'static, Async>,
+    // gps: uart::Uart<'static, Async>,
+    // imu: spi::master::SpiDmaBus<'static, Async>,
     // FIXME what is a PwmPin
     // esc_a_pwm: mcpwm::operator::PwmPin<'static, dyn mcpwm::PwmPeripheral, 0, true>,
 }
@@ -128,8 +128,8 @@ impl Esp32Drone {
         // );
 
         Esp32Drone {
-            gps: gps_uart,
-            imu: imu,
+            // gps: gps_uart,
+            // imu: imu,
             // FIXME
             // esc_a_pwm: esc_a_pwm,
         }

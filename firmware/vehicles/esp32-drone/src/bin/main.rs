@@ -1,6 +1,8 @@
 #![no_std]
 #![no_main]
 
+use core::str::FromStr;
+
 // provide no_std support
 use esp_backtrace as _; // implements panic
                         // override panic's halt to perform a software reset
@@ -13,6 +15,7 @@ use esp_alloc as _;
 
 // use re-exported dependencies
 use rad_drone::log;
+use rad_drone::embassy_net;
 
 // use local vehicle implementation
 use vehicle::Esp32Drone;
@@ -60,16 +63,21 @@ async fn main(spawner: embassy_executor::Spawner) {
         esp_wifi::EspWifiController<'static>,
         esp_wifi::init(timg0.timer0, rng.clone(), peripherals.RADIO_CLK).unwrap()
     );
-    let (wifi_ap, wifi_sta, wifi_controller) =
+    let (wifi_ap, _wifi_sta, _wifi_controller) =
         esp_wifi::wifi::new_ap_sta(&esp_wifi_ctrl, peripherals.WIFI).unwrap();
     // Init network stack
-    // let seed = (rng.random() as u64) << 32 | rng.random() as u64;
-    // let (stack, runner) = embassy_net::new(
-    //     wifi_ap,
-    //     config,
-    //     mk_static!(StackResources<3>, StackResources::<3>::new()),
-    //     seed,
-    // );
+    let seed = (rng.random() as u64) << 32 | rng.random() as u64;
+    let (stack, runner) = embassy_net::new(
+        wifi_ap,
+        // config,
+        embassy_net::Config::ipv4_static(embassy_net::StaticConfigV4{
+            address: embassy_net::Ipv4Cidr::new(embassy_net::Ipv4Address::from_str("192.168.0.1").unwrap(), 24),
+            gateway: None,
+            dns_servers: Default::default(),
+        }),
+        mk_static!(embassy_net::StackResources<3>, embassy_net::StackResources::<3>::new()),
+        seed,
+    );
 
 
     // create the vehicle

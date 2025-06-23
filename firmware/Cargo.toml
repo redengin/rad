@@ -33,7 +33,7 @@ async-trait = "*"
 # heapless = "0.8"
 
 # embassy support
-# embassy-net      = { version = "0.6", features = ["udp", "tcp"] }
+embassy-net      = { version = "*", features = ["medium-ethernet", "dhcpv4", "udp", "tcp"] }
 
 # dhcp sever support
 # edge-nal-embassy = "0.5"
